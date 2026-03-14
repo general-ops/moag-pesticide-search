@@ -6,6 +6,8 @@ RTL Hebrew interface with Google-style search layout.
 import io
 import traceback
 
+import requests
+
 import streamlit as st
 import pandas as pd
 
@@ -262,6 +264,19 @@ if search_clicked:
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 )
 
+        except requests.exceptions.HTTPError as e:
+            progress_bar.empty()
+            status_text.empty()
+            if e.response is not None and e.response.status_code == 403:
+                st.error("❌ שרת משרד החקלאות חסם את הגישה (403 Forbidden)")
+                st.info(
+                    "💡 ייתכן שהאתר חוסם גישה משרתים חיצוניים. "
+                    "נסה שוב בעוד מספר דקות, או הרץ את האפליקציה מקומית."
+                )
+            else:
+                st.error(f"❌ שגיאה: {type(e).__name__}: {e}")
+                st.code(traceback.format_exc(), language="python")
+                st.info("💡 נסה שוב. אם הבעיה חוזרת, ייתכן שהאתר אינו זמין כרגע.")
         except Exception as e:
             progress_bar.empty()
             status_text.empty()

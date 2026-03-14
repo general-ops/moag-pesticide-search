@@ -78,14 +78,22 @@ def _make_session() -> requests.Session:
     s = requests.Session()
     s.headers.update({
         "Accept": "application/json, text/plain, */*",
-        "Accept-Language": "he-IL",
+        "Accept-Language": "he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7",
         "Referer": f"{MOAG_BASE}/",
+        "Origin": MOAG_BASE,
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/120.0.0.0 Safari/537.36"
+            "Chrome/124.0.0.0 Safari/537.36"
         ),
     })
+    # Warm up: visit the main page first to pick up cookies / anti-bot tokens
+    try:
+        warmup = s.get(MOAG_BASE + "/", timeout=15)
+        _log(f"Session warmup: status={warmup.status_code}, "
+             f"cookies={list(s.cookies.keys())}")
+    except Exception as exc:
+        _log(f"Session warmup failed (continuing anyway): {exc}")
     return s
 
 
