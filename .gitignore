@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.log
+*.png
+*.csv
+*.json
+.claude/
+
+# Temporary scripts (not needed for deployment)
+api_sniffer.py
+api_sniffer_output.txt
+dump_*.py
+inspect_*.py
+inspect_*.txt
+recon.py
+recon_output.txt
+PRD.MD.txt
