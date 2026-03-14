@@ -78,9 +78,19 @@ def _make_session() -> requests.Session:
     s = requests.Session()
     s.headers.update({
         "Accept": "application/json, text/plain, */*",
+        "Accept-Encoding": "gzip, deflate, br",
         "Accept-Language": "he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7",
-        "Referer": f"{MOAG_BASE}/",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
         "Origin": MOAG_BASE,
+        "Pragma": "no-cache",
+        "Referer": f"{MOAG_BASE}/mng/gidulim",
+        "Sec-Ch-Ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+        "Sec-Ch-Ua-Mobile": "?0",
+        "Sec-Ch-Ua-Platform": '"Windows"',
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
