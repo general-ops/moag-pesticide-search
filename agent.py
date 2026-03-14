@@ -133,9 +133,10 @@ def _lookup_crop(session: requests.Session, crop_name: str) -> int:
     # Prefer exact match
     for v in values:
         if v.get("teur", "").strip() == crop_name:
-            _log(f"  Exact match: seqGidul={v['seqGidul']}")
-            return v["seqGidul"]
-    seq = values[0]["seqGidul"]
+            seq = v.get("seqGidul", 0)
+            _log(f"  Exact match: seqGidul={seq}")
+            return seq
+    seq = values[0].get("seqGidul", 0)
     _log(f"  Using first match: seqGidul={seq} ({values[0].get('teur')})")
     return seq
 
@@ -159,14 +160,14 @@ def _lookup_pest(session: requests.Session, pest_name: str,
     _log(f"Pest lookup '{pest_name}' (seqGidul={seq_gidul}): {len(values)} items")
     for v in values:
         if v.get("esevPegaHeb", "").strip() == pest_name:
-            rid = v["rownumID"]
+            rid = v.get("rownumID", 0)
             _log(f"  Exact match: rownumID={rid}")
             return rid
     # Partial match
     for v in values:
         heb = v.get("esevPegaHeb", "")
         if pest_name in heb or heb in pest_name:
-            rid = v["rownumID"]
+            rid = v.get("rownumID", 0)
             _log(f"  Partial match: rownumID={rid} ({heb})")
             return rid
     _log(f"  No match for '{pest_name}'")
@@ -400,7 +401,7 @@ def _fetch_and_parse(session: requests.Session, seq_gidul: int,
             try:
                 body = future.result()
                 if body and body.get("prodNum"):
-                    detail_data[body["prodNum"]] = body
+                    detail_data[body.get("prodNum")] = body
                 else:
                     errors.append(f"prodNum={pn}: empty response")
             except Exception as e:
